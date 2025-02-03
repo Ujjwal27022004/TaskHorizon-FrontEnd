@@ -14,6 +14,10 @@ import { Publish } from "./Publish";
 import { app } from "@microsoft/teams-js";
 import Test from "../Test";
 
+import.meta.env.JIRA_EMAIL
+import.meta.env.JIRA_API_TOKEN
+
+
 export function Welcome(props) {
   const { showFunction, environment } = {
     showFunction: true,
@@ -149,8 +153,8 @@ export function Welcome(props) {
     try {
       console.log("Sending message:", message); // Debugging log
       const response = await axios.post("http://localhost:5000/send-message", {
-        teamId: "b94dc17d-7a42-45b4-bb8a-8ccf51342e88",
-        channelId: "19:309d952cce5745c889faa9ecb705b041@thread.tacv2",
+        teamId: import.meta.env.TEAMID,
+        channelId: import.meta.env.CHANNELID,
         message: "Issue has been created successfully", // Use dynamic message input
       });
 
@@ -191,8 +195,9 @@ export function Welcome(props) {
         throw new Error('Description and issueType are required');
       }
 
-      const JIRA_EMAIL = 'ujjwal2702204@gmail.com';  // Replace with your JIRA email
-      const JIRA_API_TOKEN = 'ATATT3xFfGF0aZ9BTIUG978VNsD_Hag6JlYSdef4ttOHwPL3izRMHVuCNv40y8JRmLwhuXVUuvoYQjXKVklb_Mx6vWYllORcR6uYfqGyDGUWbryKKdXAG8yefnUk3M5dRmPFr609VqDwCwZ47KSSeDuq5qLxATqFOVQMP_rdstM2X_8wl9qGRtk=1C9D48C4';  // Replace with your JIRA API token
+      const JIRA_EMAIL = import.meta.env.JIRA_EMAIL
+      ;  // Replace with your JIRA email
+      const JIRA_API_TOKEN = import.meta.env.JIRA_API_TOKEN
       // JIRA Issue creation payload (only description and issueType passed in request body)
 
 
