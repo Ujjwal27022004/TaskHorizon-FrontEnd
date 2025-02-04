@@ -36,6 +36,13 @@
                 "groupChat",
                 "team"
             ]
+        },
+        {
+            "entityId": "testBot",
+            "name": "Test Bot",
+            "contentUrl": "${{TAB_ENDPOINT}}/index.html#/test-bot",
+            "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/test-bot",
+            "scopes": ["personal", "groupChat", "team"]
         }
     ],
     "permissions": [

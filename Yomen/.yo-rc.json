@@ -1,0 +1,9 @@
+{
+  "generator-teams": {
+    "promptValues": {
+      "developer": "Team Horizon"
+    },
+    "libraryName": "jiraCloud",
+    "generator-version": "4.1.0"
+  }
+}

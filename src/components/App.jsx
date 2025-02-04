@@ -15,6 +15,7 @@ import Tab from "./Tab";
 import { TeamsFxContext } from "./Context";
 import config from "./sample/lib/config";
 import Test from "./Test";
+import TestBot from "./TestBot";
 
 /**
  * The main app which handles the initialization and routing
@@ -49,6 +50,7 @@ export default function App() {
               <Route path="/termsofuse" element={<TermsOfUse />} />
               <Route path="/tab" element={<Tab />} />
               <Route path="/test" element={<Test />} />
+              <Route path="/test-bot" element={<TestBot />} />
               <Route path="*" element={<Navigate to={"/tab"} />}></Route>
             </Routes>
           )}
