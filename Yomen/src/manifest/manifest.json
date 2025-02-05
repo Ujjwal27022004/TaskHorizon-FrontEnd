@@ -38,6 +38,13 @@
       "contentUrl": "${{TAB_ENDPOINT}}/index.html#/test-bot",
       "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/test-bot",
       "scopes": ["personal", "groupChat", "team"]
+  },
+  {
+    "entityId": "customTab",
+    "name": "My Custom Tab",
+    "contentUrl": "${{TAB_ENDPOINT}}/index.html#/custom-tab",
+    "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/custom-tab",
+    "scopes": ["personal"]
   }
   ],
   "bots": [],

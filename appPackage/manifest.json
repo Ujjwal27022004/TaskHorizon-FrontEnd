@@ -43,7 +43,28 @@
             "contentUrl": "${{TAB_ENDPOINT}}/index.html#/test-bot",
             "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/test-bot",
             "scopes": ["personal", "groupChat", "team"]
-        }
+        },
+        {
+            "entityId": "customTab",
+            "name": "My Custom Tab",
+            "contentUrl": "${{TAB_ENDPOINT}}/index.html#/custom-tab",
+            "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/custom-tab",
+            "scopes": ["personal"]
+          },
+          {
+            "entityId": "devTab",
+            "name": "Dev-1",
+            "contentUrl": "${{TAB_ENDPOINT}}/index.html#/dev-tab",
+            "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/dev-tab",
+            "scopes": ["personal"]
+          },
+          {
+            "entityId": "channelTab",
+            "name": "Channels",
+            "contentUrl": "${{TAB_ENDPOINT}}/index.html#/channel-tab",
+            "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/channel-tab",
+            "scopes": ["personal"]
+          }
     ],
     "permissions": [
         "identity",

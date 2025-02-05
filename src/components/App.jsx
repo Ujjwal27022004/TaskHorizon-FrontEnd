@@ -16,6 +16,9 @@ import { TeamsFxContext } from "./Context";
 import config from "./sample/lib/config";
 import Test from "./Test";
 import TestBot from "./TestBot";
+import CustomTab from "./CustomTab";
+import DevTab from "./DevTab";
+import ChannelList from "./ChannelList";
 
 /**
  * The main app which handles the initialization and routing
@@ -51,7 +54,11 @@ export default function App() {
               <Route path="/tab" element={<Tab />} />
               <Route path="/test" element={<Test />} />
               <Route path="/test-bot" element={<TestBot />} />
+              <Route path="/custom-tab" element={<CustomTab />} />
+              <Route path="/dev-tab" element={<DevTab />} />
+              <Route path="/channel-tab" element={<ChannelList />} />
               <Route path="*" element={<Navigate to={"/tab"} />}></Route>
+             
             </Routes>
           )}
         </Router>
