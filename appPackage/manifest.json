@@ -22,8 +22,44 @@
         "full": "TaskHorizon App created for implementation of bidirectional flow of data between external app and Teams Tab App"
     },
     "accentColor": "#FFFFFF",
-    "bots": [],
-    "composeExtensions": [],
+    "bots": [
+    {
+        "botId": "8a330d28-9f34-454f-98e2-7888c4fcb1d5",
+        "scopes": ["team", "personal", "groupChat"],
+        "supportsFiles": false,
+        "isNotificationOnly": false
+    }
+],
+"composeExtensions": [
+    {
+        "botId": "8a330d28-9f34-454f-98e2-7888c4fcb1d5",
+        "commands": [
+            {
+                "id": "searchTask",
+                "title": "Search Task",
+                "description": "Search for a task in Jira",
+                "type": "query",
+                "parameters": [
+                    {
+                        "name": "taskQuery",
+                        "title": "Enter Task ID",
+                        "description": "Search by task ID or keyword",
+                        "inputType": "text",
+                        "isRequired": true
+                    }
+                ],
+                "fetchTask": false
+            },
+            {
+                "id": "createTask",
+                "title": "Create Task",
+                "description": "Create a new task in Jira",
+                "type": "action",
+                "fetchTask": true
+            }
+        ]
+    }
+],
     "configurableTabs": [],
     "staticTabs": [
         {

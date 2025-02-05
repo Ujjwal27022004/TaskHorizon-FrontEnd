@@ -1,61 +1,118 @@
 {
-  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.13/MicrosoftTeams.schema.json",
-  "manifestVersion": "1.13",
-  "id": "{{APPLICATION_ID}}",
-  "version": "{{VERSION}}",
-  "packageName": "{{PACKAGE_NAME}}",
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.19/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.19",
+  "version": "1.0.0",
+  "id": "${{TEAMS_APP_ID}}",
   "developer": {
-    "name": "Team Horizon",
-    "websiteUrl": "https://{{PUBLIC_HOSTNAME}}",
-    "privacyUrl": "https://{{PUBLIC_HOSTNAME}}/privacy.html",
-    "termsOfUseUrl": "https://{{PUBLIC_HOSTNAME}}/tou.html"
-  },
-  "name": {
-    "short": "Jira",
-    "full": "Jira"
-  },
-  "description": {
-    "short": "TODO: add short description here",
-    "full": "TODO: add full description here"
+      "name": "Teams App, Inc.",
+      "websiteUrl": "${{TAB_ENDPOINT}}",
+      "privacyUrl": "${{TAB_ENDPOINT}}/index.html#/privacy",
+      "termsOfUseUrl": "${{TAB_ENDPOINT}}/index.html#/termsofuse"
   },
   "icons": {
-    "outline": "icon-outline.png",
-    "color": "icon-color.png"
+      "color": "jiraicon2.png",
+      "outline": "icon2.png"
   },
-  "accentColor": "#D85028",
+  "name": {
+      "short": "Jira",
+      "full": "Task Horizon created by Team Horizon"
+  },
+  "description": {
+      "short": "Task Horizon created by Team Horizon",
+      "full": "TaskHorizon App created for implementation of bidirectional flow of data between external app and Teams Tab App"
+  },
+  "accentColor": "#FFFFFF",
+  "bots": [
+    {
+        "botId": "8a330d28-9f34-454f-98e2-7888c4fcb1d5",
+        "scopes": ["team", "personal", "groupChat"],
+        "supportsFiles": false,
+        "isNotificationOnly": false
+    }
+],
+"composeExtensions": [
+    {
+        "botId": "8a330d28-9f34-454f-98e2-7888c4fcb1d5",
+        "commands": [
+            {
+                "id": "searchTask",
+                "title": "Search Task",
+                "description": "Search for a task in Jira",
+                "type": "query",
+                "parameters": [
+                    {
+                        "name": "taskQuery",
+                        "title": "Enter Task ID",
+                        "description": "Search by task ID or keyword",
+                        "inputType": "text",
+                        "isRequired": true
+                    }
+                ],
+                "fetchTask": false
+            },
+            {
+                "id": "createTask",
+                "title": "Create Task",
+                "description": "Create a new task in Jira",
+                "type": "action",
+                "fetchTask": true
+            }
+        ]
+    }
+],
   "configurableTabs": [],
   "staticTabs": [
-    {
-      "entityId": "index",
-      "name": "Home",
-      "contentUrl": "${{TAB_ENDPOINT}}/index.html#/tab",
-      "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/tab",
-      "scopes": ["personal", "groupChat", "team"]
-  },
-  {
-      "entityId": "testBot",
-      "name": "Test Bot",
-      "contentUrl": "${{TAB_ENDPOINT}}/index.html#/test-bot",
-      "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/test-bot",
-      "scopes": ["personal", "groupChat", "team"]
-  },
-  {
-    "entityId": "customTab",
-    "name": "My Custom Tab",
-    "contentUrl": "${{TAB_ENDPOINT}}/index.html#/custom-tab",
-    "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/custom-tab",
-    "scopes": ["personal"]
-  }
+      {
+          "entityId": "index",
+          "name": "Home",
+          "contentUrl": "${{TAB_ENDPOINT}}/index.html#/tab",
+          "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/tab",
+          "scopes": [
+              "personal",
+              "groupChat",
+              "team"
+          ]
+      },
+      {
+          "entityId": "testBot",
+          "name": "Test Bot",
+          "contentUrl": "${{TAB_ENDPOINT}}/index.html#/test-bot",
+          "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/test-bot",
+          "scopes": ["personal", "groupChat", "team"]
+      },
+      {
+          "entityId": "customTab",
+          "name": "DuckDuckGo",
+          "contentUrl": "${{TAB_ENDPOINT}}/index.html#/custom-tab",
+          "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/custom-tab",
+          "scopes": ["personal"]
+        },
+        {
+          "entityId": "devTab",
+          "name": "Dev-1",
+          "contentUrl": "${{TAB_ENDPOINT}}/index.html#/dev-tab",
+          "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/dev-tab",
+          "scopes": ["personal"]
+        },
+        {
+          "entityId": "channelTab",
+          "name": "Channels",
+          "contentUrl": "${{TAB_ENDPOINT}}/index.html#/channel-tab",
+          "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/channel-tab",
+          "scopes": ["personal"]
+        }
   ],
-  "bots": [],
-  "connectors": [],
-  "composeExtensions": [],
   "permissions": [
-    "identity",
-    "messageTeamMembers"
+      "identity",
+      "messageTeamMembers"
   ],
   "validDomains": [
-    "{{PUBLIC_HOSTNAME}}"
+      "${{TAB_HOSTNAME}}"
   ],
-  "showLoadingIndicator": false
+  "webApplicationInfo": {
+      "id": "${{AAD_APP_CLIENT_ID}}",
+      "resource": "api://${{TAB_DOMAIN}}/${{AAD_APP_CLIENT_ID}}"
+  }
 }
+
+  
