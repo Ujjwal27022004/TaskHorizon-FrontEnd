@@ -7,9 +7,12 @@ const CustomTab = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Welcome to My Custom Tab 🎉</h1>
-            <p>This is a custom tab inside Microsoft Teams.</p>
+        <div style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
+            <iframe 
+                src="https://html.duckduckgo.com/html" 
+                title="DuckDuckGo Search Engine"
+                style={{ width: "100%", height: "100%", border: "none" }} 
+            />
         </div>
     );
 };
