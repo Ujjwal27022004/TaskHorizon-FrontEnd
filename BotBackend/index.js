@@ -24,6 +24,7 @@ server.post('/api/messages', async (req, res) => {
 
                 const commandId = context.activity.value.commandId;
                 console.log(`📌 Command ID received: ${commandId}`);
+                
             
             const responseText = {
                 "Action-1": "Hello Action 1",
