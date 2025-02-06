@@ -51,11 +51,25 @@
                 "fetchTask": false
             },
             {
-                "id": "createTask",
-                "title": "Create Task",
+                "id": "Action-1",
+                "title": "Action 1",
                 "description": "Create a new task in Jira",
                 "type": "action",
-                "fetchTask": true
+                "fetchTask": false
+            },
+            {
+                "id": "Action-2",
+                "title": "Action 2",
+                "description": "Create a new task in Jira",
+                "type": "action",
+                "fetchTask": false
+            },
+            {
+                "id": "Action-3",
+                "title": "Action 3",
+                "description": "Create a new task in Jira",
+                "type": "action",
+                "fetchTask": false
             }
         ]
     }
@@ -80,13 +94,6 @@
             "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/test-bot",
             "scopes": ["personal", "groupChat", "team"]
         },
-        {
-            "entityId": "customTab",
-            "name": "DuckDuckGo",
-            "contentUrl": "${{TAB_ENDPOINT}}/index.html#/custom-tab",
-            "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/custom-tab",
-            "scopes": ["personal"]
-          },
           {
             "entityId": "devTab",
             "name": "Dev-1",
@@ -107,7 +114,8 @@
         "messageTeamMembers"
     ],
     "validDomains": [
-        "${{TAB_HOSTNAME}}"
+        "${{TAB_HOSTNAME}}",
+        "https://ed60-2401-4900-1c45-ccf4-65b2-8349-2459-cdc3.ngrok-free.app"
     ],
     "webApplicationInfo": {
         "id": "${{AAD_APP_CLIENT_ID}}",
