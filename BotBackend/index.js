@@ -33,23 +33,7 @@ server.post('/api/messages', async (req, res) => {
             } else if (commandId === "Get-Issues") {
                 responseCard = getIssuesForm();
             } else if (commandId === "customAction") {
-                await context.sendActivity({
-                    type: 'invokeResponse',
-                    value: {
-                        status: 200,
-                        body: {
-                            task: {
-                                type: 'continue',
-                                value: {
-                                    card: CardFactory.adaptiveCard(createIssueForm()),
-                                    title: "Custom Action Form",
-                                    height: "medium"
-                                }
-                            }
-                        }
-                    }
-                });
-                return;
+                responseCard = createIssueForm();
             } else {
                 responseCard = {
                     type: 'AdaptiveCard',
@@ -64,10 +48,13 @@ server.post('/api/messages', async (req, res) => {
                 value: {
                     status: 200,
                     body: {
-                        composeExtension: {
-                            type: 'result',
-                            attachmentLayout: 'list',
-                            attachments: [CardFactory.adaptiveCard(responseCard)]
+                        task: {
+                            type: 'continue',
+                            value: {
+                                card: CardFactory.adaptiveCard(responseCard),
+                                title: "Action Form",
+                                height: "medium"
+                            }
                         }
                     }
                 }
@@ -85,10 +72,10 @@ function createIssueForm() {
             { type: "TextBlock", text: "Create a new Jira Issue", weight: "Bolder", size: "Medium" },
             { type: "Input.Text", id: "issueTitle", placeholder: "Enter issue title" },
             { type: "Input.Text", id: "issueDescription", placeholder: "Enter issue description" },
-            { type: "Input.ChoiceSet", id: "priority", title: "Priority", choices: [
-                { title: "Low", value: "Low" },
-                { title: "Medium", value: "Medium" },
-                { title: "High", value: "High" }
+            { type: "Input.ChoiceSet", id: "priority", title: "Priority",placeholder: "Issue-Type", choices: [
+                { title: "Bug", value: "Bug" },
+                { title: "Issue", value: "Issue" },
+                { title: "Task", value: "Task" }
             ]},
             { type: "ActionSet", actions: [
                 { type: "Action.Submit", title: "Create Issue", data: { action: "create_issue" } }
