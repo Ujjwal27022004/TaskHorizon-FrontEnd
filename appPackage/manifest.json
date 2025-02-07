@@ -121,7 +121,7 @@
     ],
     "validDomains": [
         "${{TAB_HOSTNAME}}",
-        "https://ed60-2401-4900-1c45-ccf4-65b2-8349-2459-cdc3.ngrok-free.app"
+        "https://4a45-2401-4900-1c45-ccf4-f498-ba3f-f846-a84a.ngrok-free.app"
     ],
     "webApplicationInfo": {
         "id": "${{AAD_APP_CLIENT_ID}}",
