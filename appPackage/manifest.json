@@ -23,57 +23,67 @@
     },
     "accentColor": "#FFFFFF",
     "bots": [
-    {
-        "botId": "8a330d28-9f34-454f-98e2-7888c4fcb1d5",
-        "scopes": ["team", "personal", "groupChat"],
-        "supportsFiles": false,
-        "isNotificationOnly": false
-    }
-],
-"composeExtensions": [
-    {
-        "botId": "8a330d28-9f34-454f-98e2-7888c4fcb1d5",
-        "commands": [
-            {
-                "id": "searchTask",
-                "title": "Search Task",
-                "description": "Search for a task in Jira",
-                "type": "query",
-                "parameters": [
-                    {
-                        "name": "taskQuery",
-                        "title": "Enter Task ID",
-                        "description": "Search by task ID or keyword",
-                        "inputType": "text",
-                        "isRequired": true
-                    }
-                ],
-                "fetchTask": false
-            },
-            {
-                "id": "Action-1",
-                "title": "Action 1",
-                "description": "Create a new task in Jira",
-                "type": "action",
-                "fetchTask": false
-            },
-            {
-                "id": "Action-2",
-                "title": "Action 2",
-                "description": "Create a new task in Jira",
-                "type": "action",
-                "fetchTask": false
-            },
-            {
-                "id": "Action-3",
-                "title": "Action 3",
-                "description": "Create a new task in Jira",
-                "type": "action",
-                "fetchTask": false
-            }
-        ]
-    }
-],
+        {
+            "botId": "0bc21a2c-b9c1-4bd5-9989-0c5aaf324d64",
+            "scopes": ["team", "personal", "groupChat"],
+            "supportsFiles": false,
+            "isNotificationOnly": false
+        }
+    ],
+    "composeExtensions": [
+        {
+            "botId": "0bc21a2c-b9c1-4bd5-9989-0c5aaf324d64",
+            "canUpdateConfiguration": true,
+            "commands": [
+                {
+                    "id": "customAction",
+                    "title": "Perform Custom Action",
+                    "description": "Performs a custom action on a message",
+                    "type": "action",
+                    "fetchTask": true,
+                    "context": ["message"]
+                },
+                
+                {
+                    "id": "searchTask",
+                    "title": "Search Task",
+                    "description": "Search for a task in Jira",
+                    "type": "query",
+                    "parameters": [
+                        {
+                            "name": "taskQuery",
+                            "title": "Enter Task ID",
+                            "description": "Search by task ID or keyword",
+                            "inputType": "text",
+                            "isRequired": true
+                        }
+                    ],
+                    "fetchTask": false
+                },
+                {
+                    "id": "Create-Issue",
+                    "title": "Create Issue",
+                    "description": "Create a new issue in Jira",
+                    "type": "action",
+                    "fetchTask": true
+                },
+                {
+                    "id": "Update-Issue",
+                    "title": "Update Issue",
+                    "description": "Update an existing Jira issue",
+                    "type": "action",
+                    "fetchTask": true
+                },
+                {
+                    "id": "Get-Issues",
+                    "title": "Get Issues",
+                    "description": "Retrieve a list of Jira issues",
+                    "type": "action",
+                    "fetchTask": true
+                }
+            ]
+        }
+    ],
     "configurableTabs": [],
     "staticTabs": [
         {
@@ -81,11 +91,7 @@
             "name": "Home",
             "contentUrl": "${{TAB_ENDPOINT}}/index.html#/tab",
             "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/tab",
-            "scopes": [
-                "personal",
-                "groupChat",
-                "team"
-            ]
+            "scopes": ["personal", "groupChat", "team"]
         },
         {
             "entityId": "testBot",
@@ -94,20 +100,20 @@
             "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/test-bot",
             "scopes": ["personal", "groupChat", "team"]
         },
-          {
+        {
             "entityId": "devTab",
             "name": "Dev-1",
             "contentUrl": "${{TAB_ENDPOINT}}/index.html#/dev-tab",
             "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/dev-tab",
             "scopes": ["personal"]
-          },
-          {
+        },
+        {
             "entityId": "channelTab",
             "name": "Channels",
             "contentUrl": "${{TAB_ENDPOINT}}/index.html#/channel-tab",
             "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/channel-tab",
             "scopes": ["personal"]
-          }
+        }
     ],
     "permissions": [
         "identity",
