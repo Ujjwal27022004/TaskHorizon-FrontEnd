@@ -46,6 +46,10 @@ export function Welcome(props) {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const issuesPerPage = 5;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedIssue, setSelectedIssue] = useState(null);
+  const [updatedDescription, setUpdatedDescription] = useState("");
+  const [updatedIssueType, setUpdatedIssueType] = useState("");
   const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
   const indexOfLastIssue = currentPage * issuesPerPage;
@@ -196,7 +200,7 @@ export function Welcome(props) {
       }
 
       const JIRA_EMAIL = import.meta.env.JIRA_EMAIL
-      ;  // Replace with your JIRA email
+        ;  // Replace with your JIRA email
       const JIRA_API_TOKEN = import.meta.env.JIRA_API_TOKEN
       // JIRA Issue creation payload (only description and issueType passed in request body)
 
@@ -225,6 +229,75 @@ export function Welcome(props) {
     // Your existing Teams message sending logic here
     console.log(`Sending message to team: ${teamId}, channel: ${channelId}, message: ${message}`);
   }
+
+
+
+  //Handle update method
+  // const handleUpdateIssue = async (issueKey, currentIssueType, currentDescription) => {
+  //   const updatedDescription = prompt("Enter new description:", currentDescription);
+  //   const updatedIssueType = prompt("Enter new issue type (Bug/Story/Task):", currentIssueType);
+
+  //   if (!updatedDescription || !updatedIssueType) {
+  //     alert("Both fields are required!");
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await axios.post("http://localhost:5000/updateIssue", {
+  //       verb: "updateIssue",
+  //       data: {
+  //         issueKey,
+  //         updatedIssueType,
+  //         updatedDescription,
+  //       },
+  //     });
+
+  //     console.log("JIRA issue updated:", response.data);
+  //     alert("Issue updated successfully!");
+  //     f // Refresh to show updated data
+  //   } catch (error) {
+  //     console.error("Error updating issue:", error);
+  //     alert("Failed to update issue. Please try again.");
+  //   }
+  // };
+
+  const handleOpenModal = (issue) => {
+    setSelectedIssue(issue);
+    setUpdatedDescription(issue.description || "");
+    setUpdatedIssueType(issue.issueType || "Bug");
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedIssue(null);
+  };
+
+  const handleUpdateIssue = async () => {
+    if (!updatedDescription || !updatedIssueType) {
+      alert("Both fields are required!");
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:5000/updateIssue", {
+        verb: "updateIssue",
+        data: {
+          issueKey: selectedIssue.key,
+          updatedIssueType,
+          updatedDescription,
+        },
+      });
+
+      console.log("JIRA issue updated:", response.data);
+      alert("Issue updated successfully!");
+      window.location.reload(); // Refresh the issues list
+      handleCloseModal();
+    } catch (error) {
+      console.error("Error updating issue:", error);
+      alert("Failed to update issue. Please try again.");
+    }
+  };
 
 
 
@@ -264,8 +337,8 @@ export function Welcome(props) {
         color: isDarkMode ? "#f4f4f4" : "#333",
         transition: "all 0.3s ease-in-out",
       }} */}
-       {/* Prevent form submission */}
-        {/* <h1>This was our to do app implementation</h1>
+      {/* Prevent form submission */}
+      {/* <h1>This was our to do app implementation</h1>
         <label htmlFor="message"
         style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}
         >
@@ -306,44 +379,44 @@ export function Welcome(props) {
       </form> */}
 
       <form
-       style={{
-        maxWidth: "700px",
-        margin: "20px auto",
-        padding: "20px",
-        borderRadius: "10px",
-        boxShadow: isDarkMode
-          ? "0 4px 10px rgba(255, 255, 255, 0.1)"
-          : "0 4px 10px rgba(0, 0, 0, 0.1)",
-        backgroundColor: isDarkMode ? "#2c2c2c" : "#ffffff",
-        color: isDarkMode ? "#f4f4f4" : "#333",
-        transition: "all 0.3s ease-in-out",
-      }}
+        style={{
+          maxWidth: "700px",
+          margin: "20px auto",
+          padding: "20px",
+          borderRadius: "10px",
+          boxShadow: isDarkMode
+            ? "0 4px 10px rgba(255, 255, 255, 0.1)"
+            : "0 4px 10px rgba(0, 0, 0, 0.1)",
+          backgroundColor: isDarkMode ? "#2c2c2c" : "#ffffff",
+          color: isDarkMode ? "#f4f4f4" : "#333",
+          transition: "all 0.3s ease-in-out",
+        }}
         onSubmit={(e) => {
           e.preventDefault();  // Prevent form submission and page refresh
           sendMessageAfterCreatingBugOnJira(description, issueType);  // Call the function here
         }}
       >
         <h1
-        style={{
-          textAlign: "center",
-          marginBottom: "20px",
-          fontSize: "22px",
-          lineHeight:"30px"
-        }}
+          style={{
+            textAlign: "center",
+            marginBottom: "20px",
+            fontSize: "22px",
+            lineHeight: "30px"
+          }}
         >
           Create an Product Backlog using MS Team's integrated Polarion Application
         </h1>
         <label htmlFor="description"
-        style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}
-        > 
-        Enter Description 
+          style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}
+        >
+          Enter Description
         </label>
-          <input
-            type='text'
-            value={description}
-            placeholder="Description"
-            onChange={(e) => { setDescription(e.target.value); }}
-            style={{
+        <input
+          type='text'
+          value={description}
+          placeholder="Description"
+          onChange={(e) => { setDescription(e.target.value); }}
+          style={{
             width: "100%",
             padding: "10px",
             marginBottom: "15px",
@@ -352,33 +425,33 @@ export function Welcome(props) {
             backgroundColor: isDarkMode ? "#3a3a3a" : "#fff",
             color: isDarkMode ? "#f4f4f4" : "#333",
           }}
-          />
-       
+        />
+
 
         <label htmlFor="issueType"
-        style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}
+          style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}
         >
           Enter Product Backlog Type
-            </label>
-            <select
-            name="issueType"
-            value={issueType}
-            onChange={(e)=>setIssueType(e.target.value)} 
-            style={{
-              width: "100%",
-              padding: "10px",
-              marginBottom: "15px",
-              borderRadius: "5px",
-              border: `1px solid ${isDarkMode ? "#444" : "#ddd"}`,
-              backgroundColor: isDarkMode ? "#3a3a3a" : "#fff",
-              color: isDarkMode ? "#f4f4f4" : "#333",
-            }}
-            >
-              <option value="Bug">Bug</option>
-              <option value="Story">Story</option>
-              <option value="Task">Task</option>
-            </select>
-          {/* <input
+        </label>
+        <select
+          name="issueType"
+          value={issueType}
+          onChange={(e) => setIssueType(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "10px",
+            marginBottom: "15px",
+            borderRadius: "5px",
+            border: `1px solid ${isDarkMode ? "#444" : "#ddd"}`,
+            backgroundColor: isDarkMode ? "#3a3a3a" : "#fff",
+            color: isDarkMode ? "#f4f4f4" : "#333",
+          }}
+        >
+          <option value="Bug">Bug</option>
+          <option value="Story">Story</option>
+          <option value="Task">Task</option>
+        </select>
+        {/* <input
             type='text'
             value={issueType}
             placeholder="issue type"
@@ -395,18 +468,18 @@ export function Welcome(props) {
           /> */}
 
         <button type="submit"
-        style={{
-          width: "100%",
-          padding: "12px",
-          borderRadius: "5px",
-          border: "none",
-          cursor: "pointer",
-          fontSize: "16px",
-          backgroundColor: isDarkMode ? "#03738C" : "#03738C",
-          color: "white",
-          fontWeight: "bold",
-          transition: "background 0.3s",
-        }}
+          style={{
+            width: "100%",
+            padding: "12px",
+            borderRadius: "5px",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "16px",
+            backgroundColor: isDarkMode ? "#03738C" : "#03738C",
+            color: "white",
+            fontWeight: "bold",
+            transition: "background 0.3s",
+          }}
         >
           Create Polarion Product Backlog
         </button>
@@ -443,11 +516,40 @@ export function Welcome(props) {
                       <td style={styles.td}>{issue.summary}</td>
                       <td style={styles.td}>{issue.description || "No description"}</td>
                       <td style={styles.td}>{issue.issueType}</td>
+                      <td style={styles.td}>
+                        <button
+                          // onClick={() => handleUpdateIssue(issue.key, issue.issueType, issue.description)}
+                          // style={{
+                          //   padding: "8px",
+                          //   border: "none",
+                          //   cursor: "pointer",
+                          //   borderRadius: "5px",
+                          //   backgroundColor: "#03738C",
+                          //   color: "white",
+                          //   fontSize: "12px",
+                          //   fontWeight: "bold",
+                          //   transition: "background 0.3s",
+                          // }}
+                          onClick={() => handleOpenModal(issue)}
+                          style={{
+                            padding: "8px",
+                            backgroundColor: "#03738C",
+                            color: "white",
+                            border: "none",
+                            cursor: "pointer",
+                            borderRadius: "5px",
+                          }}
+                        >
+                          Update
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+
+            
 
             {/* Pagination Controls */}
             <div style={styles.pagination}>
@@ -471,6 +573,39 @@ export function Welcome(props) {
             </div>
           </>
         )}
+
+
+          {/* Modal for Updating Issue */}
+      {isModalOpen && (
+        <div style={modalStyles.overlay}>
+          <div style={modalStyles.modal}>
+            <h3>Update Issue</h3>
+            <label>Description:</label>
+            <input
+              type="text"
+              value={updatedDescription}
+              onChange={(e) => setUpdatedDescription(e.target.value)}
+              style={modalStyles.input}
+            />
+            <label>Issue Type:</label>
+            <select
+              value={updatedIssueType}
+              onChange={(e) => setUpdatedIssueType(e.target.value)}
+              style={modalStyles.input}
+            >
+              <option value="Bug">Bug</option>
+              <option value="Story">Story</option>
+              <option value="Task">Task</option>
+            </select>
+            <button onClick={handleUpdateIssue} style={modalStyles.button}>
+              Save
+            </button>
+            <button onClick={handleCloseModal} style={modalStyles.cancelButton}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
       </div>
 
 
@@ -520,3 +655,49 @@ export function Welcome(props) {
 
   );
 }
+const modalStyles = {
+  overlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modal: {
+    background: "white",
+    padding: "20px",
+    borderRadius: "8px",
+    width: "400px",
+    textAlign: "center",
+  },
+  input: {
+    width: "100%",
+    padding: "8px",
+    margin: "10px 0",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+  },
+  button: {
+    padding: "10px",
+    backgroundColor: "#03738C",
+    color: "white",
+    border: "none",
+    cursor: "pointer",
+    borderRadius: "5px",
+    marginRight: "10px",
+  },
+  cancelButton: {
+    padding: "10px",
+    backgroundColor: "#ccc",
+    color: "black",
+    border: "none",
+    cursor: "pointer",
+    borderRadius: "5px",
+  },
+};
+
+
