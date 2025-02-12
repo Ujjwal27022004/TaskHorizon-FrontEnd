@@ -108,7 +108,13 @@
             ]
         }
     ],
-    "configurableTabs": [],
+    "configurableTabs": [
+        {
+            "configurationUrl": "${{TAB_ENDPOINT}}/index.html#/dev-tab",
+            "canUpdateConfiguration": true,
+            "scopes": ["team", "groupChat"]
+        }
+    ],
     "staticTabs": [
         {
             "entityId": "index",
@@ -129,14 +135,14 @@
             "name": "Dev-1",
             "contentUrl": "${{TAB_ENDPOINT}}/index.html#/dev-tab",
             "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/dev-tab",
-            "scopes": ["personal"]
+            "scopes": ["personal", "team"]
         },
         {
             "entityId": "channelTab",
             "name": "Channels",
             "contentUrl": "${{TAB_ENDPOINT}}/index.html#/channel-tab",
             "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/channel-tab",
-            "scopes": ["personal"]
+            "scopes": ["personal", "team"]
         }
     ],
     "permissions": [
