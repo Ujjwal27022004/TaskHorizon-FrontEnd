@@ -23,6 +23,7 @@ import CreateIssue from "./CreateIssue";
 import UpdateIssue from "./UpdateIssue";
 import GetIssues from "./GetIssues";
 
+
 /**
  * The main app which handles the initialization and routing
  * of the app.
@@ -63,6 +64,7 @@ export default function App() {
               <Route path="/create-issue" component={CreateIssue} />
               <Route path="/update-issue" component={UpdateIssue} />
               <Route path="/get-issues" component={GetIssues} />
+              
               <Route path="*" element={<Navigate to={"/tab"} />}></Route>
              
             </Routes>
