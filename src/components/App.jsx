@@ -19,9 +19,9 @@ import TestBot from "./TestBot";
 import CustomTab from "./CustomTab";
 import DevTab from "./DevTab";
 import ChannelList from "./ChannelList";
-import CreateIssue from "./CreateIssue";
+import GetIssue from "./GetIssues";
 import UpdateIssue from "./UpdateIssue";
-import GetIssues from "./GetIssues";
+
 
 
 /**
@@ -61,10 +61,8 @@ export default function App() {
               <Route path="/custom-tab" element={<CustomTab />} />
               <Route path="/dev-tab" element={<DevTab />} />
               <Route path="/channel-tab" element={<ChannelList />} />
-              <Route path="/create-issue" component={CreateIssue} />
-              <Route path="/update-issue" component={UpdateIssue} />
-              <Route path="/get-issues" component={GetIssues} />
-              
+              <Route path="/get-issue" element={<GetIssue />} />
+              <Route path="/update-issue" element={<UpdateIssue />} />  
               <Route path="*" element={<Navigate to={"/tab"} />}></Route>
              
             </Routes>

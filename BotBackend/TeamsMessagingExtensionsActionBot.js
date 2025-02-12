@@ -32,7 +32,7 @@ export class TeamsMessagingExtensionsActionBot extends TeamsActivityHandler {
                                 task: {
                                     type: 'continue',
                                     value: {
-                                        url: "https://localhost:53000/#/tab",
+                                        url: "https://localhost:53000/#/dev-tab",
                                         title: "Create Jira Issue",
                                         height: "medium",
                                         width: "medium",
@@ -52,9 +52,10 @@ export class TeamsMessagingExtensionsActionBot extends TeamsActivityHandler {
                                 task: {
                                     type: 'continue',
                                     value: {
-                                        card: CardFactory.adaptiveCard(updateIssueForm()),
-                                        title: "Update Issue",
-                                        height: "medium"
+                                        url: "https://localhost:53000/#/update-issue",
+                                        title: "Update Jira Issue",
+                                        height: "medium",
+                                        width: "medium",
                                     }
                                 }
                             }
@@ -71,9 +72,10 @@ export class TeamsMessagingExtensionsActionBot extends TeamsActivityHandler {
                                 task: {
                                     type: 'continue',
                                     value: {
-                                        card: CardFactory.adaptiveCard(getIssuesForm()),
-                                        title: "Get Issues",
-                                        height: "medium"
+                                        url: "https://localhost:53000/#/get-issue",
+                                        title: "Get a Jira Issue",
+                                        height: "medium",
+                                        width: "medium",
                                     }
                                 }
                             }

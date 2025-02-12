@@ -1,47 +1,152 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import * as microsoftTeams from "@microsoft/teams-js";
+import axios from "axios";
 
-const UpdateIssue = ({ onClose }) => {
-  const [updateData, setUpdateData] = useState({
-    issueId: "",
-    status: "In Progress",
-    comment: "",
-  });
+const UpdateIssue = () => {
+    const [issueKey, setIssueKey] = useState("");
+    const [updatedDescription, setUpdatedDescription] = useState("");
+    const [updatedIssueType, setUpdatedIssueType] = useState("Bug");
 
-  const handleChange = (e) => {
-    setUpdateData({ ...updateData, [e.target.name]: e.target.value });
-  };
+    useEffect(() => {
+        microsoftTeams.initialize();
+    }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Updating Issue:", updateData);
-    // Call API to update issue here
-    onClose();
-  };
+    const handleUpdate = async (e) => {
+        e.preventDefault();
 
-  return (
-    <div className="modal">
-      <div className="modal-content">
-        <h2>Update Jira Issue</h2>
-        <form onSubmit={handleSubmit}>
-          <label>Issue ID:</label>
-          <input type="text" name="issueId" value={updateData.issueId} onChange={handleChange} required />
-          
-          <label>Status:</label>
-          <select name="status" value={updateData.status} onChange={handleChange}>
-            <option>To Do</option>
-            <option>In Progress</option>
-            <option>Done</option>
-          </select>
+        try {
+            const response = await axios.put("http://localhost:5000/updateIssue", {
+                verb: "updateIssue",
+                data: {
+                    issueKey,
+                    updatedIssueType,
+                    updatedDescription
+                }
+            });
 
-          <label>Comment:</label>
-          <textarea name="comment" value={updateData.comment} onChange={handleChange} />
+            console.log("✅ Issue Updated:", response.data);
+            microsoftTeams.tasks.submitTask({
+                success: true,
+                message: `Issue Updated: ${issueKey}`
+            });
+        } catch (error) {
+            console.error("❌ Failed to update issue:", error.response?.data || error.message);
+            microsoftTeams.tasks.submitTask({
+                success: false,
+                message: "Failed to update Jira issue."
+            });
+        }
+    };
 
-          <button type="submit">Update</button>
-          <button type="button" onClick={onClose}>Cancel</button>
-        </form>
-      </div>
-    </div>
-  );
+    return (
+        <div style={styles.container}>
+            <div style={styles.card}>
+                <h2 style={styles.heading}>Update Jira Issue ✏️</h2>
+                <form onSubmit={handleUpdate}>
+                    <div style={styles.inputGroup}>
+                        <label style={styles.label}>Issue Key:</label>
+                        <input
+                            type="text"
+                            value={issueKey}
+                            onChange={(e) => setIssueKey(e.target.value)}
+                            required
+                            style={styles.input}
+                            placeholder="Enter Issue Key (e.g., JIRA-123)"
+                        />
+                    </div>
+
+                    <div style={styles.inputGroup}>
+                        <label style={styles.label}>New Issue Type:</label>
+                        <select
+                            value={updatedIssueType}
+                            onChange={(e) => setUpdatedIssueType(e.target.value)}
+                            style={styles.input}
+                        >
+                            <option value="Bug">Bug</option>
+                            <option value="Task">Task</option>
+                            <option value="Story">Story</option>
+                        </select>
+                    </div>
+
+                    <div style={styles.inputGroup}>
+                        <label style={styles.label}>New Description:</label>
+                        <textarea
+                            value={updatedDescription}
+                            onChange={(e) => setUpdatedDescription(e.target.value)}
+                            required
+                            style={styles.textarea}
+                            placeholder="Enter updated description"
+                        />
+                    </div>
+
+                    <button type="submit" style={styles.button}>
+                        Update Issue
+                    </button>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+const styles = {
+    container: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        padding: "20px",
+        backgroundColor: "#f4f4f4",
+        width: "100vw",
+    },
+    card: {
+        backgroundColor: "#fff",
+        padding: "20px",
+        borderRadius: "8px",
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+        width: "100%",
+    },
+    heading: {
+        textAlign: "center",
+        color: "#333",
+        marginBottom: "15px",
+    },
+    inputGroup: {
+        marginBottom: "15px",
+    },
+    label: {
+        display: "block",
+        marginBottom: "5px",
+        fontWeight: "bold",
+        color: "#333",
+    },
+    input: {
+        width: "100%",
+        padding: "10px",
+        border: "1px solid #ccc",
+        borderRadius: "5px",
+        fontSize: "14px",
+    },
+    textarea: {
+        width: "100%",
+        padding: "10px",
+        border: "1px solid #ccc",
+        borderRadius: "5px",
+        fontSize: "14px",
+        height: "100px",
+        resize: "none",
+    },
+    button: {
+        backgroundColor: "#0078D4",
+        color: "#fff",
+        padding: "12px",
+        border: "none",
+        borderRadius: "5px",
+        cursor: "pointer",
+        width: "100%",
+        fontSize: "16px",
+        fontWeight: "bold",
+        transition: "background 0.3s ease",
+    },
 };
 
 export default UpdateIssue;
