@@ -5,6 +5,7 @@ import axios from "axios";
 const DevTab = () => {
     const [description, setDescription] = useState("");
     const [issueType, setIssueType] = useState("Bug");
+    const [message, setMessage] = useState("");
 
     useEffect(() => {
         microsoftTeams.initialize();
@@ -12,6 +13,7 @@ const DevTab = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setMessage(""); // Clear previous message
 
         const issueData = {
             description,
@@ -31,12 +33,14 @@ const DevTab = () => {
             );
 
             console.log("✅ Issue Created:", response.data);
+            setMessage(`✅ Issue Created: ${response.data.issueKey}`);
             microsoftTeams.tasks.submitTask({ 
                 success: true, 
                 message: `Issue Created: ${response.data.issueKey}` 
             });
         } catch (error) {
             console.error("❌ Failed to create issue:", error.response?.data || error.message);
+            setMessage("❌ Failed to create Jira issue. Please try again.");
             microsoftTeams.tasks.submitTask({ 
                 success: false, 
                 message: "Failed to create Jira issue." 
@@ -76,12 +80,12 @@ const DevTab = () => {
                         Create Issue
                     </button>
                 </form>
+                {message && <p style={styles.feedback}>{message}</p>}
             </div>
         </div>
     );
 };
 
-// 🔹 Improved Styles
 const styles = {
     container: {
         display: "flex",
@@ -140,8 +144,14 @@ const styles = {
         fontWeight: "bold",
         transition: "background 0.3s ease",
     },
-    buttonHover: {
-        backgroundColor: "#005ea2",
+    feedback: {
+        marginTop: "10px",
+        padding: "10px",
+        borderRadius: "5px",
+        fontWeight: "bold",
+        textAlign: "center",
+        color: "#fff",
+        backgroundColor: "#28a745",
     },
 };
 

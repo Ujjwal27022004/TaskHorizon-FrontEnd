@@ -15,6 +15,7 @@ const JIRA_AUTH = {
 export class TeamsMessagingExtensionsActionBot extends TeamsActivityHandler {
     constructor() {
         super();
+        
 
         this.onInvokeActivity = async (context) => {
             const commandId = context.activity.value.commandId;
@@ -131,7 +132,15 @@ export class TeamsMessagingExtensionsActionBot extends TeamsActivityHandler {
 
             await next();
         };
+
+
+        
+
+
     }
+
+
+
 }
 
 // ===========================
@@ -187,63 +196,65 @@ function getStatusId(status) {
     return statusMap[status] || "11";
 }
 
+
+
 // ===========================
 // ✅ Adaptive Card Functions
 // ===========================
 
-function createIssueForm() {
-    return {
-        type: "AdaptiveCard",
-        body: [
-            { type: "TextBlock", text: "Create a new Jira Issue", weight: "Bolder", size: "Medium" },
-            { type: "Input.Text", id: "issueTitle", placeholder: "Enter issue title" },
-            { type: "Input.Text", id: "issueDescription", placeholder: "Enter issue description" },
-            { type: "Input.ChoiceSet", id: "priority", title: "Priority", choices: [
-                { title: "Bug", value: "Bug" },
-                { title: "Issue", value: "Issue" },
-                { title: "Task", value: "Task" }
-            ]},
-            { type: "ActionSet", actions: [
-                { type: "Action.Submit", title: "Create Issue", data: { action: "create_issue" } }
-            ]}
-        ],
-        $schema: "http://adaptivecards.io/schemas/adaptive-card.json",
-        version: "1.2"
-    };
-}
+// function createIssueForm() {
+//     return {
+//         type: "AdaptiveCard",
+//         body: [
+//             { type: "TextBlock", text: "Create a new Jira Issue", weight: "Bolder", size: "Medium" },
+//             { type: "Input.Text", id: "issueTitle", placeholder: "Enter issue title" },
+//             { type: "Input.Text", id: "issueDescription", placeholder: "Enter issue description" },
+//             { type: "Input.ChoiceSet", id: "priority", title: "Priority", choices: [
+//                 { title: "Bug", value: "Bug" },
+//                 { title: "Issue", value: "Issue" },
+//                 { title: "Task", value: "Task" }
+//             ]},
+//             { type: "ActionSet", actions: [
+//                 { type: "Action.Submit", title: "Create Issue", data: { action: "create_issue" } }
+//             ]}
+//         ],
+//         $schema: "http://adaptivecards.io/schemas/adaptive-card.json",
+//         version: "1.2"
+//     };
+// }
 
-function updateIssueForm() {
-    return {
-        type: "AdaptiveCard",
-        body: [
-            { type: "TextBlock", text: "Update Jira Issue", weight: "Bolder", size: "Medium" },
-            { type: "Input.Text", id: "issueId", placeholder: "Enter issue ID to update" },
-            { type: "Input.Text", id: "newDescription", placeholder: "Enter new description" },
-            { type: "Input.ChoiceSet", id: "status", title: "Status", choices: [
-                { title: "To Do", value: "To Do" },
-                { title: "In Progress", value: "In Progress" },
-                { title: "Done", value: "Done" }
-            ]},
-            { type: "ActionSet", actions: [
-                { type: "Action.Submit", title: "Update Issue", data: { action: "update_issue" } }
-            ]}
-        ],
-        $schema: "http://adaptivecards.io/schemas/adaptive-card.json",
-        version: "1.2"
-    };
-}
+// function updateIssueForm() {
+//     return {
+//         type: "AdaptiveCard",
+//         body: [
+//             { type: "TextBlock", text: "Update Jira Issue", weight: "Bolder", size: "Medium" },
+//             { type: "Input.Text", id: "issueId", placeholder: "Enter issue ID to update" },
+//             { type: "Input.Text", id: "newDescription", placeholder: "Enter new description" },
+//             { type: "Input.ChoiceSet", id: "status", title: "Status", choices: [
+//                 { title: "To Do", value: "To Do" },
+//                 { title: "In Progress", value: "In Progress" },
+//                 { title: "Done", value: "Done" }
+//             ]},
+//             { type: "ActionSet", actions: [
+//                 { type: "Action.Submit", title: "Update Issue", data: { action: "update_issue" } }
+//             ]}
+//         ],
+//         $schema: "http://adaptivecards.io/schemas/adaptive-card.json",
+//         version: "1.2"
+//     };
+// }
 
-function getIssuesForm() {
-    return {
-        type: "AdaptiveCard",
-        body: [
-            { type: "TextBlock", text: "Fetch Jira Issues", weight: "Bolder", size: "Medium" },
-            { type: "Input.Text", id: "projectId", placeholder: "Enter Project ID" },
-            { type: "ActionSet", actions: [
-                { type: "Action.Submit", title: "Get Issues", data: { action: "get_issues" } }
-            ]}
-        ],
-        $schema: "http://adaptivecards.io/schemas/adaptive-card.json",
-        version: "1.2"
-    };
-}
+// function getIssuesForm() {
+//     return {
+//         type: "AdaptiveCard",
+//         body: [
+//             { type: "TextBlock", text: "Fetch Jira Issues", weight: "Bolder", size: "Medium" },
+//             { type: "Input.Text", id: "projectId", placeholder: "Enter Project ID" },
+//             { type: "ActionSet", actions: [
+//                 { type: "Action.Submit", title: "Get Issues", data: { action: "get_issues" } }
+//             ]}
+//         ],
+//         $schema: "http://adaptivecards.io/schemas/adaptive-card.json",
+//         version: "1.2"
+//     };
+// }

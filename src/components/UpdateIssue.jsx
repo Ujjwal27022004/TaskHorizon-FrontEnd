@@ -6,6 +6,7 @@ const UpdateIssue = () => {
     const [issueKey, setIssueKey] = useState("");
     const [updatedDescription, setUpdatedDescription] = useState("");
     const [updatedIssueType, setUpdatedIssueType] = useState("Bug");
+    const [feedbackMessage, setFeedbackMessage] = useState("");
 
     useEffect(() => {
         microsoftTeams.initialize();
@@ -25,12 +26,14 @@ const UpdateIssue = () => {
             });
 
             console.log("✅ Issue Updated:", response.data);
+            setFeedbackMessage(`✅ Issue Updated: ${issueKey}`);
             microsoftTeams.tasks.submitTask({
                 success: true,
                 message: `Issue Updated: ${issueKey}`
             });
         } catch (error) {
             console.error("❌ Failed to update issue:", error.response?.data || error.message);
+            setFeedbackMessage("❌ Failed to update Jira issue.");
             microsoftTeams.tasks.submitTask({
                 success: false,
                 message: "Failed to update Jira issue."
@@ -83,6 +86,7 @@ const UpdateIssue = () => {
                         Update Issue
                     </button>
                 </form>
+                {feedbackMessage && <p style={styles.feedback}>{feedbackMessage}</p>}
             </div>
         </div>
     );
@@ -147,6 +151,12 @@ const styles = {
         fontWeight: "bold",
         transition: "background 0.3s ease",
     },
+    feedback: {
+        marginTop: "10px",
+        textAlign: "center",
+        fontWeight: "bold",
+        color: "#0078D4",
+    }
 };
 
 export default UpdateIssue;
