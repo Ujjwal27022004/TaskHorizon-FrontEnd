@@ -35,7 +35,7 @@ export class TeamsMessagingExtensionsActionBot extends TeamsActivityHandler {
                                     value: {
                                         url: "https://localhost:53000/#/dev-tab",
                                         title: "Create Jira Issue",
-                                        height: "medium",
+                                        height: "large",
                                         width: "medium",
                                     }
                                 }
@@ -55,7 +55,7 @@ export class TeamsMessagingExtensionsActionBot extends TeamsActivityHandler {
                                     value: {
                                         url: "https://localhost:53000/#/update-issue",
                                         title: "Update Jira Issue",
-                                        height: "medium",
+                                        height: "large",
                                         width: "medium",
                                     }
                                 }
@@ -75,7 +75,7 @@ export class TeamsMessagingExtensionsActionBot extends TeamsActivityHandler {
                                     value: {
                                         url: "https://localhost:53000/#/get-issue",
                                         title: "Get a Jira Issue",
-                                        height: "medium",
+                                        height: "large",
                                         width: "medium",
                                     }
                                 }

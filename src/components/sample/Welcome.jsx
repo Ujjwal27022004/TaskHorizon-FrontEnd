@@ -1,282 +1,121 @@
-import { useContext, useState, useEffect } from "react";
-import axios from 'axios';
+"use client"
 
-
-import { Image, TabList, Tab } from "@fluentui/react-components";
-import "./Welcome.css";
-import { EditCode } from "./EditCode";
-//import { AzureFunctions } from "./AzureFunctions";
-import { CurrentUser } from "./CurrentUser";
-// import { useData } from "@microsoft/teamsfx-react";
-import { Deploy } from "./Deploy";
-import { Publish } from "./Publish";
-// import { TeamsFxContext } from "../Context";
-import { app } from "@microsoft/teams-js";
-import Test from "../Test";
-
-import.meta.env.JIRA_EMAIL
-import.meta.env.JIRA_API_TOKEN
-
+import { useState, useEffect } from "react"
+import axios from "axios"
+import { Image } from "@fluentui/react-components"
+import {
+  Button,
+  Input,
+  Select,
+  Label,
+  Spinner,
+  Dialog,
+  DialogTrigger,
+  DialogSurface,
+  DialogBody,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@fluentui/react-components"
+import {
+  Add24Regular,
+  ChevronLeft24Regular,
+  ChevronRight24Regular,
+  Search24Regular,
+  ArrowSortDown24Regular,
+  ArrowSortUp24Regular,
+} from "@fluentui/react-icons"
+import "./Welcome.css"
 
 export function Welcome(props) {
-  const { showFunction, environment } = {
-    showFunction: true,
+  const { environment } = {
     environment: window.location.hostname === "localhost" ? "local" : "azure",
     ...props,
-  };
-  const friendlyEnvironmentName =
-    {
-      local: "local environment",
-      azure: "Azure environment",
-    }[environment] || "local environment";
-
-  // const { teamsUserCredential } = useContext(TeamsFxContext);
-  // const { loading, data, error } = useData(async () => {
-  //   if (teamsUserCredential) {
-  //     const userInfo = await teamsUserCredential.getUserInfo();
-  //     return userInfo;
-  //   }
-  // });
-  const userName = "djhbfjhfsb";
-
-  const [message, setMessage] = useState("")
-  const [description, setDescription] = useState("")
-  const [issueType, setIssueType] = useState("Bug")
-  const [issues, setIssues] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const issuesPerPage = 5;
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedIssue, setSelectedIssue] = useState(null);
-  const [updatedDescription, setUpdatedDescription] = useState("");
-  const [updatedIssueType, setUpdatedIssueType] = useState("");
-  const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-  const indexOfLastIssue = currentPage * issuesPerPage;
-  const indexOfFirstIssue = indexOfLastIssue - issuesPerPage;
-  const currentIssues = issues.slice(indexOfFirstIssue, indexOfLastIssue);
-  const totalPages = Math.ceil(issues.length / issuesPerPage);
-
-  const nextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-  const prevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const styles = {
-    container: {
-      maxWidth: "1280px",
-      margin: "20px auto",
-      padding: "20px",
-      borderRadius: "10px",
-      boxShadow: isDarkMode
-        ? "0 4px 10px rgba(255, 255, 255, 0.1)"
-        : "0 4px 10px rgba(0, 0, 0, 0.1)",
-      backgroundColor: isDarkMode ? "#2c2c2c" : "#ffffff",
-      color: isDarkMode ? "#f4f4f4" : "#333",
-      transition: "all 0.3s ease-in-out",
-    },
-    heading: {
-      textAlign: "center",
-      marginBottom: "30px",
-      fontSize: "24px",
-      fontWeight: "bold",
-      color: isDarkMode ? "#f4f4f4" : "#222",
-    },
-    tableContainer: {
-      overflowX: "auto",
-      borderRadius: "8px",
-    },
-    table: {
-      width: "100%",
-      borderCollapse: "collapse",
-      borderRadius: "8px",
-      overflow: "hidden",
-    },
-    th: {
-      padding: "12px",
-      backgroundColor: isDarkMode ? "#03738C" : "#03738C",
-      color: "white",
-      textAlign: "left",
-      fontWeight: "bold",
-    },
-    td: {
-      padding: "15px",
-      //border: `1px solid ${isDarkMode ? "#444" : "#ddd"}`,
-      textAlign: "left",
-    },
-    rowEven: {
-      backgroundColor: isDarkMode ? "#3a3a3a" : "#f9f9f9",
-    },
-    rowHover: {
-      backgroundColor: isDarkMode ? "#03738C" : "#03738C",
-      transition: "background 0.2s",
-    },
-    pagination: {
-      display: "flex",
-      justifyContent: "center",
-      marginTop: "30px",
-      gap: "20px",
-    },
-    button: {
-      padding: "8px 15px",
-      border: "none",
-      cursor: "pointer",
-      borderRadius: "5px",
-      backgroundColor: isDarkMode ? "#03738C" : "#03738C",
-      color: "white",
-      fontSize: "14px",
-      fontWeight: "bold",
-      transition: "background 0.3s",
-    },
-    buttonDisabled: {
-      opacity: 0.5,
-      cursor: "not-allowed",
-    },
-  };
-
-  useEffect(() => {
-    // Fetch issues from API
-    const response = axios
-      .get("http://localhost:5000/get-jira-issues") // Replace with your actual API URL
-      .then((response) => {
-        console.log("API response is: ", response.data)
-        setLoading(true)
-        setIssues(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching issues:", error);
-        setLoading(false);
-      });
-
-  }, []);
-
-  const sendMessageToTeams = async () => {
-    try {
-      console.log("Sending message:", message); // Debugging log
-      const response = await axios.post("http://localhost:5000/send-message", {
-        teamId: import.meta.env.TEAMID,
-        channelId: import.meta.env.CHANNELID,
-        message: "Issue has been created successfully", // Use dynamic message input
-      });
-
-      console.log("Process done");
-      console.log(response.data);
-
-      const todoResponse = await axios.post("http://localhost:5000/api/todos", {
-        text: message,  // Same as the message
-        completed: false
-      });
-
-      console.log("Todo added successfully:", todoResponse.data);
-
-
-    } catch (error) {
-      console.log("Error sending the message", error); // Log errors
-    }
-  };
-
-  const sendMessageAfterCreatingBugOnJira = async (description, issueType) => {
-    const obj = {
-      description,
-      issueType
-    };
-
-    const issueData = {
-      description: obj.description,
-      issueType: obj.issueType
-    };
-
-    console.log('Sending to JIRA:', obj);
-
-    console.log("working till here")
-
-    try {
-      // Ensure description and issueType are provided
-      if (!description || !issueType) {
-        throw new Error('Description and issueType are required');
-      }
-
-      const JIRA_EMAIL = import.meta.env.JIRA_EMAIL
-        ;  // Replace with your JIRA email
-      const JIRA_API_TOKEN = import.meta.env.JIRA_API_TOKEN
-      // JIRA Issue creation payload (only description and issueType passed in request body)
-
-
-      // Encode credentials for Basic Authentication
-      const authHeader = `Basic ${btoa(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`)}`;
-
-      // Send the request to create the JIRA issue using Basic Auth
-      const response = await axios.post("http://localhost:5000/create-jira-issue", issueData, {
-        headers: {
-          'Authorization': authHeader,  // Basic Authentication
-          'Content-Type': 'application/json'
-        }
-      });
-
-      console.log("Issue has been submitted successfully:", response.data);
-
-
-    } catch (error) {
-      console.log("Error in creating JIRA bug and sending message to Teams channel", error);
-    }
-  };
-
-  // Assuming you have this function for sending messages to Teams (already implemented in your backend)
-  async function sendMessageToChannel(teamId, channelId, message) {
-    // Your existing Teams message sending logic here
-    console.log(`Sending message to team: ${teamId}, channel: ${channelId}, message: ${message}`);
   }
 
+  const [description, setDescription] = useState("")
+  const [issueType, setIssueType] = useState("Bug")
+  const [issues, setIssues] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedIssue, setSelectedIssue] = useState(null)
+  const [updatedDescription, setUpdatedDescription] = useState("")
+  const [updatedIssueType, setUpdatedIssueType] = useState("")
+  const [searchTerm, setSearchTerm] = useState("")
+  const [sortField, setSortField] = useState("key")
+  const [sortDirection, setSortDirection] = useState("asc")
+  const [filterType, setFilterType] = useState("All")
 
+  const issuesPerPage = 10
+  const indexOfLastIssue = currentPage * issuesPerPage
+  const indexOfFirstIssue = indexOfLastIssue - issuesPerPage
 
-  //Handle update method
-  // const handleUpdateIssue = async (issueKey, currentIssueType, currentDescription) => {
-  //   const updatedDescription = prompt("Enter new description:", currentDescription);
-  //   const updatedIssueType = prompt("Enter new issue type (Bug/Story/Task):", currentIssueType);
+  const filteredIssues = issues
+    .filter(
+      (issue) =>
+        (filterType === "All" || issue.issueType === filterType) &&
+        (issue.key.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          issue.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          issue.description.toLowerCase().includes(searchTerm.toLowerCase())),
+    )
+    .sort((a, b) => {
+      if (a[sortField] < b[sortField]) return sortDirection === "asc" ? -1 : 1
+      if (a[sortField] > b[sortField]) return sortDirection === "asc" ? 1 : -1
+      return 0
+    })
 
-  //   if (!updatedDescription || !updatedIssueType) {
-  //     alert("Both fields are required!");
-  //     return;
-  //   }
+  const currentIssues = filteredIssues.slice(indexOfFirstIssue, indexOfLastIssue)
+  const totalPages = Math.ceil(filteredIssues.length / issuesPerPage)
 
-  //   try {
-  //     const response = await axios.post("http://localhost:5000/updateIssue", {
-  //       verb: "updateIssue",
-  //       data: {
-  //         issueKey,
-  //         updatedIssueType,
-  //         updatedDescription,
-  //       },
-  //     });
+  useEffect(() => {
+    fetchIssues()
+  }, [])
 
-  //     console.log("JIRA issue updated:", response.data);
-  //     alert("Issue updated successfully!");
-  //     f // Refresh to show updated data
-  //   } catch (error) {
-  //     console.error("Error updating issue:", error);
-  //     alert("Failed to update issue. Please try again.");
-  //   }
-  // };
+  const fetchIssues = async () => {
+    setLoading(true)
+    try {
+      const response = await axios.get("http://localhost:5000/get-jira-issues")
+      setIssues(response.data)
+    } catch (error) {
+      console.error("Error fetching issues:", error)
+    }
+    setLoading(false)
+  }
+
+  const sendMessageAfterCreatingBugOnJira = async (description, issueType) => {
+    try {
+      const issueData = { description, issueType }
+      const response = await axios.post("http://localhost:5000/create-jira-issue", issueData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      console.log("Issue has been submitted successfully:", response.data)
+      fetchIssues()
+      setDescription("")
+      setIssueType("Bug")
+    } catch (error) {
+      console.log("Error in creating JIRA bug", error)
+    }
+  }
 
   const handleOpenModal = (issue) => {
-    setSelectedIssue(issue);
-    setUpdatedDescription(issue.description || "");
-    setUpdatedIssueType(issue.issueType || "Bug");
-    setIsModalOpen(true);
-  };
+    setSelectedIssue(issue)
+    setUpdatedDescription(issue.description || "")
+    setUpdatedIssueType(issue.issueType || "Bug")
+    setIsModalOpen(true)
+  }
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedIssue(null);
-  };
+    setIsModalOpen(false)
+    setSelectedIssue(null)
+  }
 
   const handleUpdateIssue = async () => {
     if (!updatedDescription || !updatedIssueType) {
-      alert("Both fields are required!");
-      return;
+      alert("Both fields are required!")
+      return
     }
 
     try {
@@ -287,417 +126,191 @@ export function Welcome(props) {
           updatedIssueType,
           updatedDescription,
         },
-      });
+      })
 
-      console.log("JIRA issue updated:", response.data);
-      alert("Issue updated successfully!");
-      window.location.reload(); // Refresh the issues list
-      handleCloseModal();
+      console.log("JIRA issue updated:", response.data)
+      alert("Issue updated successfully!")
+      fetchIssues()
+      handleCloseModal()
     } catch (error) {
-      console.error("Error updating issue:", error);
-      alert("Failed to update issue. Please try again.");
+      console.error("Error updating issue:", error)
+      alert("Failed to update issue. Please try again.")
     }
-  };
+  }
 
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
+    } else {
+      setSortField(field)
+      setSortDirection("asc")
+    }
+  }
 
-
-
-  // const hubName = useData(async () => {
-  //   await app.initialize();
-  //   const context = await app.getContext();
-  //   return context.app.host.name;
-  // })?.data;
-  const [selectedValue, setSelectedValue] = useState("local");
-
-  const onTabSelect = (event, data) => {
-    setSelectedValue(data.value);
-  };
   return (
-    <div className="welcome page">
-      {/* //   <div className="narrow page-padding">
-    //     <Image src="hello.png" />
-    //     <h1 className="center">Congratulations{userName ? ", " + userName : ""}!</h1>
-    //     <p className="center">Your app is running in your {friendlyEnvironmentName}</p>
-    //     {hubName && <p className="center">Your app is running in {hubName}</p>} */}
+    <div className="jira-app">
+      <header className="app-header">
+        <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVS-idYcK2ntCWT_pBtrFUcI7nx5--KC3n-A&s" alt="Jira Logo" className="jira-logo" />
+        <h1>Jira Cloud for Microsoft Teams</h1>
+      </header>
 
-
-      {/* <form onSubmit={(e) => {
-        e.preventDefault()
-        sendMessageAfterCreatingBugOnJira();
-      }}
-      style={{
-        maxWidth: "600px",
-        margin: "20px auto",
-        padding: "20px",
-        borderRadius: "10px",
-        boxShadow: isDarkMode
-          ? "0 4px 10px rgba(255, 255, 255, 0.1)"
-          : "0 4px 10px rgba(0, 0, 0, 0.1)",
-        backgroundColor: isDarkMode ? "#2c2c2c" : "#ffffff",
-        color: isDarkMode ? "#f4f4f4" : "#333",
-        transition: "all 0.3s ease-in-out",
-      }} */}
-      {/* Prevent form submission */}
-      {/* <h1>This was our to do app implementation</h1>
-        <label htmlFor="message"
-        style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}
-        >
-          Enter Your Message to send to MS Teams (or external app)
-          </label>
-          <input
-            type='text'
-            value={message}
-            placeholder="Enter a Message"
-            onChange={(e) => { setMessage(e.target.value) }}
-            style={{
-              width: "100%",
-              padding: "10px",
-              marginBottom: "15px",
-              borderRadius: "5px",
-              border: `1px solid ${isDarkMode ? "#444" : "#ddd"}`,
-              backgroundColor: isDarkMode ? "#3a3a3a" : "#fff",
-              color: isDarkMode ? "#f4f4f4" : "#333",
+      <main className="app-main">
+        <section className="create-issue-section">
+          <h2>Create New Issue</h2>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              sendMessageAfterCreatingBugOnJira(description, issueType)
             }}
-          />
-        
-        <button onClick={sendMessageToTeams}
-        style={{
-          width: "100%",
-          padding: "12px",
-          borderRadius: "5px",
-          border: "none",
-          cursor: "pointer",
-          fontSize: "16px",
-          backgroundColor: isDarkMode ? "#007bff" : "#0056b3",
-          color: "white",
-          fontWeight: "bold",
-          transition: "background 0.3s",
-        }}
-        >
-          Click on this button to send message
-        </button>
-      </form> */}
+          >
+            <Label htmlFor="description">Description</Label>
+            <Input
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter issue description"
+            />
 
-      <form
-        style={{
-          maxWidth: "700px",
-          margin: "20px auto",
-          padding: "20px",
-          borderRadius: "10px",
-          boxShadow: isDarkMode
-            ? "0 4px 10px rgba(255, 255, 255, 0.1)"
-            : "0 4px 10px rgba(0, 0, 0, 0.1)",
-          backgroundColor: isDarkMode ? "#2c2c2c" : "#ffffff",
-          color: isDarkMode ? "#f4f4f4" : "#333",
-          transition: "all 0.3s ease-in-out",
-        }}
-        onSubmit={(e) => {
-          e.preventDefault();  // Prevent form submission and page refresh
-          sendMessageAfterCreatingBugOnJira(description, issueType);  // Call the function here
-        }}
-      >
-        <h1
-          style={{
-            textAlign: "center",
-            marginBottom: "20px",
-            fontSize: "22px",
-            lineHeight: "30px"
-          }}
-        >
-          Create an Product Backlog using MS Team's integrated Polarion Application
-        </h1>
-        <label htmlFor="description"
-          style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}
-        >
-          Enter Description
-        </label>
-        <input
-          type='text'
-          value={description}
-          placeholder="Description"
-          onChange={(e) => { setDescription(e.target.value); }}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginBottom: "15px",
-            borderRadius: "5px",
-            border: `1px solid ${isDarkMode ? "#444" : "#ddd"}`,
-            backgroundColor: isDarkMode ? "#3a3a3a" : "#fff",
-            color: isDarkMode ? "#f4f4f4" : "#333",
-          }}
-        />
+            <Label htmlFor="issueType">Issue Type</Label>
+            <Select id="issueType" value={issueType} onChange={(e) => setIssueType(e.target.value)}>
+              <option value="Bug">Bug</option>
+              <option value="Story">Story</option>
+              <option value="Task">Task</option>
+            </Select>
 
+            <Button appearance="primary" icon={<Add24Regular />} type="submit">
+              Create Issue
+            </Button>
+          </form>
+        </section>
 
-        <label htmlFor="issueType"
-          style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}
-        >
-          Enter Product Backlog Type
-        </label>
-        <select
-          name="issueType"
-          value={issueType}
-          onChange={(e) => setIssueType(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginBottom: "15px",
-            borderRadius: "5px",
-            border: `1px solid ${isDarkMode ? "#444" : "#ddd"}`,
-            backgroundColor: isDarkMode ? "#3a3a3a" : "#fff",
-            color: isDarkMode ? "#f4f4f4" : "#333",
-          }}
-        >
-          <option value="Bug">Bug</option>
-          <option value="Story">Story</option>
-          <option value="Task">Task</option>
-        </select>
-        {/* <input
-            type='text'
-            value={issueType}
-            placeholder="issue type"
-            onChange={(e) => { setIssueType(e.target.value); }}
-            style={{
-              width: "100%",
-              padding: "10px",
-              marginBottom: "15px",
-              borderRadius: "5px",
-              border: `1px solid ${isDarkMode ? "#444" : "#ddd"}`,
-              backgroundColor: isDarkMode ? "#3a3a3a" : "#fff",
-              color: isDarkMode ? "#f4f4f4" : "#333",
-            }}
-          /> */}
-
-        <button type="submit"
-          style={{
-            width: "100%",
-            padding: "12px",
-            borderRadius: "5px",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "16px",
-            backgroundColor: isDarkMode ? "#03738C" : "#03738C",
-            color: "white",
-            fontWeight: "bold",
-            transition: "background 0.3s",
-          }}
-        >
-          Create Polarion Product Backlog
-        </button>
-      </form>
-      <div style={styles.container}>
-        <h2 style={styles.heading}>Product Backlogs</h2>
-
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          <>
-            <div style={styles.tableContainer}>
-              <table style={styles.table}>
+        <section className="issues-list-section">
+          <h2>Issues List</h2>
+          <div className="issues-controls">
+            <div className="search-bar">
+              <Input
+                placeholder="Search issues..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                contentBefore={<Search24Regular />}
+              />
+            </div>
+            <div className="filter-dropdown">
+              <Select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
+                <option value="All">All Types</option>
+                <option value="Bug">Bugs</option>
+                <option value="Story">Stories</option>
+                <option value="Task">Tasks</option>
+              </Select>
+            </div>
+          </div>
+          {loading ? (
+            <Spinner label="Loading issues..." />
+          ) : (
+            <>
+              <table className="issues-table">
                 <thead>
                   <tr>
-                    <th style={styles.th}>ID</th>
-                    <th style={styles.th}>Key</th>
-                    <th style={styles.th}>Summary</th>
-                    <th style={styles.th}>Description</th>
-                    <th style={styles.th}>Backlog Type</th>
+                    <th onClick={() => handleSort("key")}>
+                      Key{" "}
+                      {sortField === "key" &&
+                        (sortDirection === "asc" ? <ArrowSortUp24Regular /> : <ArrowSortDown24Regular />)}
+                    </th>
+                    <th onClick={() => handleSort("summary")}>
+                      Summary{" "}
+                      {sortField === "summary" &&
+                        (sortDirection === "asc" ? <ArrowSortUp24Regular /> : <ArrowSortDown24Regular />)}
+                    </th>
+                    <th>Description</th>
+                    <th onClick={() => handleSort("issueType")}>
+                      Type{" "}
+                      {sortField === "issueType" &&
+                        (sortDirection === "asc" ? <ArrowSortUp24Regular /> : <ArrowSortDown24Regular />)}
+                    </th>
+                    <th>Status</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {currentIssues.map((issue, index) => (
-                    <tr
-                      key={issue.id}
-                      style={{
-                        ...styles.td,
-                        ...(index % 2 === 0 ? styles.rowEven : {}),
-                      }}
-                    >
-                      <td style={styles.td}>{issue.id}</td>
-                      <td style={styles.td}>{issue.key}</td>
-                      <td style={styles.td}>{issue.summary}</td>
-                      <td style={styles.td}>{issue.description || "No description"}</td>
-                      <td style={styles.td}>{issue.issueType}</td>
-                      <td style={styles.td}>
-                        <button
-                          // onClick={() => handleUpdateIssue(issue.key, issue.issueType, issue.description)}
-                          // style={{
-                          //   padding: "8px",
-                          //   border: "none",
-                          //   cursor: "pointer",
-                          //   borderRadius: "5px",
-                          //   backgroundColor: "#03738C",
-                          //   color: "white",
-                          //   fontSize: "12px",
-                          //   fontWeight: "bold",
-                          //   transition: "background 0.3s",
-                          // }}
-                          onClick={() => handleOpenModal(issue)}
-                          style={{
-                            padding: "8px",
-                            backgroundColor: "#03738C",
-                            color: "white",
-                            border: "none",
-                            cursor: "pointer",
-                            borderRadius: "5px",
-                          }}
-                        >
+                  {currentIssues.map((issue) => (
+                    <tr key={issue.id} className="issue-row">
+                      <td>{issue.key}</td>
+                      <td>{issue.summary}</td>
+                      <td className="issue-description">{issue.description || "No description"}</td>
+                      <td>
+                        <span className={`issue-type ${issue.issueType.toLowerCase()}`}>{issue.issueType}</span>
+                      </td>
+                      <td>
+                        <span className="issue-status">{issue.status || "Open"}</span>
+                      </td>
+                      <td>
+                        <Button appearance="subtle" onClick={() => handleOpenModal(issue)}>
                           Update
-                        </button>
+                        </Button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            </div>
 
-            
+              <div className="pagination">
+                <Button
+                  icon={<ChevronLeft24Regular />}
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </Button>
+                <span>
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  icon={<ChevronRight24Regular />}
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            </>
+          )}
+        </section>
+      </main>
 
-            {/* Pagination Controls */}
-            <div style={styles.pagination}>
-              <button
-                style={{ ...styles.button, ...(currentPage === 1 ? styles.buttonDisabled : {}) }}
-                onClick={prevPage}
-                disabled={currentPage === 1}
+      <Dialog open={isModalOpen} onOpenChange={(_, data) => setIsModalOpen(data.open)}>
+        <DialogSurface>
+          <DialogBody>
+            <DialogTitle>Update Issue</DialogTitle>
+            <DialogContent>
+              <Label htmlFor="updatedDescription">Description</Label>
+              <Input
+                id="updatedDescription"
+                value={updatedDescription}
+                onChange={(e) => setUpdatedDescription(e.target.value)}
+              />
+              <Label htmlFor="updatedIssueType">Issue Type</Label>
+              <Select
+                id="updatedIssueType"
+                value={updatedIssueType}
+                onChange={(e) => setUpdatedIssueType(e.target.value)}
               >
-                ⬅ Previous
-              </button>
-              <span>
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                style={{ ...styles.button, ...(currentPage === totalPages ? styles.buttonDisabled : {}) }}
-                onClick={nextPage}
-                disabled={currentPage === totalPages}
-              >
-                Next ➡
-              </button>
-            </div>
-          </>
-        )}
-
-
-          {/* Modal for Updating Issue */}
-      {isModalOpen && (
-        <div style={modalStyles.overlay}>
-          <div style={modalStyles.modal}>
-            <h3>Update Issue</h3>
-            <label>Description:</label>
-            <input
-              type="text"
-              value={updatedDescription}
-              onChange={(e) => setUpdatedDescription(e.target.value)}
-              style={modalStyles.input}
-            />
-            <label>Issue Type:</label>
-            <select
-              value={updatedIssueType}
-              onChange={(e) => setUpdatedIssueType(e.target.value)}
-              style={modalStyles.input}
-            >
-              <option value="Bug">Bug</option>
-              <option value="Story">Story</option>
-              <option value="Task">Task</option>
-            </select>
-            <button onClick={handleUpdateIssue} style={modalStyles.button}>
-              Save
-            </button>
-            <button onClick={handleCloseModal} style={modalStyles.cancelButton}>
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-      </div>
-
-
-
-
-      <div className="tabList">
-        {/* <TabList selectedValue={selectedValue} onTabSelect={onTabSelect}>
-          <Tab id="Local" value="local">
-            1. Build your app locally
-          </Tab>
-          <Tab id="Azure" value="azure">
-            2. Provision and Deploy to the Cloud
-          </Tab>
-          <Tab id="Publish" value="publish">
-            3. Publish to Teams
-          </Tab>
-          <Tab id="Test" value="test">
-            4. Test Message
-          </Tab>
-        </TabList> */}
-        <div>
-          {selectedValue === "local" && (
-            <div>
-              <EditCode showFunction={showFunction} />
-              <CurrentUser userName={userName} />
-              {/* //{showFunction && <AzureFunctions />} */}
-            </div>
-          )}
-          {selectedValue === "azure" && (
-            <div>
-              <Deploy />
-            </div>
-          )}
-          {selectedValue === "publish" && (
-            <div>
-              <Publish />
-            </div>
-          )}
-          {selectedValue === "test" && (
-            <div>
-              <Test />
-            </div>
-          )}
-        </div>
-      </div>
+                <option value="Bug">Bug</option>
+                <option value="Story">Story</option>
+                <option value="Task">Task</option>
+              </Select>
+            </DialogContent>
+            <DialogActions>
+              <DialogTrigger disableButtonEnhancement>
+                <Button appearance="secondary">Cancel</Button>
+              </DialogTrigger>
+              <Button appearance="primary" onClick={handleUpdateIssue}>
+                Save
+              </Button>
+            </DialogActions>
+          </DialogBody>
+        </DialogSurface>
+      </Dialog>
     </div>
-
-  );
+  )
 }
-const modalStyles = {
-  overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    backgroundColor: "rgba(0,0,0,0.5)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  modal: {
-    background: "white",
-    padding: "20px",
-    borderRadius: "8px",
-    width: "400px",
-    textAlign: "center",
-  },
-  input: {
-    width: "100%",
-    padding: "8px",
-    margin: "10px 0",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-  },
-  button: {
-    padding: "10px",
-    backgroundColor: "#03738C",
-    color: "white",
-    border: "none",
-    cursor: "pointer",
-    borderRadius: "5px",
-    marginRight: "10px",
-  },
-  cancelButton: {
-    padding: "10px",
-    backgroundColor: "#ccc",
-    color: "black",
-    border: "none",
-    cursor: "pointer",
-    borderRadius: "5px",
-  },
-};
-
 
