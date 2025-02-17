@@ -35,8 +35,8 @@ export class TeamsMessagingExtensionsActionBot extends TeamsActivityHandler {
                                     value: {
                                         url: "https://localhost:53000/#/dev-tab",
                                         title: "Create Jira Issue",
-                                        height: "medium",
-                                        width: "medium",
+                                        height: "large",
+                                        width: "large",
                                     }
                                 }
                             }

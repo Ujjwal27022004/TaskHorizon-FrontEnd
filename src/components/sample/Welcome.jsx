@@ -150,8 +150,9 @@ export function Welcome(props) {
   return (
     <div className="jira-app">
       <header className="app-header">
-        <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVS-idYcK2ntCWT_pBtrFUcI7nx5--KC3n-A&s" alt="Jira Logo" className="jira-logo" />
-        <h1>Jira Cloud for Microsoft Teams</h1>
+        <Image src="https://polarion.plm.automation.siemens.com/hs-fs/hubfs/LOGOS/Polarion_2015/PolarionLogos_Polarion_Default_Logo.png?width=443&height=502&name=PolarionLogos_Polarion_Default_Logo.png" alt="Jira Logo" className="jira-logo" />
+        <h1>Polarion for Microsoft Teams</h1>
+        
       </header>
 
       <main className="app-main">
